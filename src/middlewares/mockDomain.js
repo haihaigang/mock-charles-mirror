@@ -3,6 +3,7 @@ export default function(req, res, next) {
     res.locals.mockDomain = req.hostname
   } else {
     res.locals.mockDomain = 'default'
+    res.locals.mockDomain = 'api-qa.shouwuapp.com'
   }
 
   function checkValidatedDomain(domain) {

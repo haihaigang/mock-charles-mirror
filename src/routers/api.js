@@ -45,20 +45,20 @@ router.all('*', (req, res, next) => {
       res.json(JSON.parse(data));
     } else {
       let files = getDirInfo(oneFile.absolutePath);
-      res.render(VIEWS_NAME_DIR, { files });
+      res.render(VIEWS_NAME_DIR, { files, dir:req.path });
     }
   } else {
     if (!lastPathName) {
       // 最后一部分路径为空 === 根目录
       // 根目录直接列出目录下内容
-      return res.render(VIEWS_NAME_DIR, { files });
+      return res.render(VIEWS_NAME_DIR, { files, dir: req.path });
     }
     notFound(res);
   }
 });
 
 function getMockFileRootPath(res) {
-  return path.resolve(process.cwd(), MOCK_ROOT_PATH, res.locals.mockDomain || "");
+  return path.resolve(process.cwd(), MOCK_ROOT_PATH, res.locals.mockDomain || "api-qa.shouwuapp.com");
 }
 
 function getMockFilePathFromReq(res, reqPath) {
@@ -87,6 +87,8 @@ function getDirInfo(filePath) {
       link = filename = decodeURIComponent(file);
     }
 
+    let relPath = path.relative(getMockFileRootPath({locals:{}}), decodeURIComponent(absolutePath))
+
     return {
       filename,
       link,
@@ -96,6 +98,7 @@ function getDirInfo(filePath) {
       originFilename: file,
       absolutePath,
       size: statInfo.size,
+      editLink: '/admin?url=' + encodeURIComponent(relPath)
     };
   });
 }

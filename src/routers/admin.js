@@ -15,8 +15,14 @@ router.all('/', (req, res, next) => {
 })
 
 router.get('/getApi', (req, res, next) => {
-  const { url } = req.query
+  let { url } = req.query
   if (!url) throw new Error('参数错误，缺少参数 url')
+
+  let urls = url.split("?")
+  if (urls.length === 2) {
+    // 若存在参数，为了兼容 charles 保存的文件，需要把文件名称编码
+    url = urls[0] + encodeURIComponent("?" +urls[1]).toLowerCase()
+  }
   let filePath = path.resolve(getMockFileRootPath(res), url)
   try{
     let data = readFile(filePath)
