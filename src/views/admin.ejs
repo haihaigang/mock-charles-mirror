@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width" />
+    <title>新增 / 编辑接口</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.5.7/jsoneditor.css"
+      integrity="sha512-Sbn0ZCJ/Sq+RcpmI2np6vYlQBolmDPIrx95V3kOQU7RfEOWRCgEmDvj5lD4oNnx55KVIUfadYs8rk3OudD+dFA=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <style rel="stylesheet">
+      * {
+        box-sizing: border-box;
+      }
+      .form-control {
+        display: block;
+        width: 100%;
+        height: 34px;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #555555;
+        background-color: #fff;
+        background-image: none;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075);
+      }
+      .form-control:focus {
+        border-color: #66afe9;
+        outline: 0;
+        -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+          0 0 8px rgba(102, 175, 233, 0.6);
+        box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.075),
+          0 0 8px rgba(102, 175, 233, 0.6);
+      }
+      .form-control::-moz-placeholder {
+        color: #999;
+        opacity: 1;
+      }
+      .form-control:-ms-input-placeholder {
+        color: #999;
+      }
+      .form-control::-webkit-input-placeholder {
+        color: #999;
+      }
+      .form-control[disabled],
+      .form-control[readonly] {
+        background-color: #eeeeee;
+        opacity: 1;
+      }
+      .form-control[disabled] {
+        cursor: not-allowed;
+      }
+
+      .form-group {
+        margin-bottom: 15px;
+      }
+
+      .form-inline .form-group {
+        display: inline-block;
+        margin-bottom: 0;
+        vertical-align: middle;
+      }
+      .form-inline .form-control {
+        display: inline-block;
+        width: auto;
+        vertical-align: middle;
+      }
+
+      .btn {
+        display: inline-block;
+        margin-bottom: 0;
+        font-weight: normal;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: middle;
+        -ms-touch-action: manipulation;
+        touch-action: manipulation;
+        cursor: pointer;
+        background-image: none;
+        border: 1px solid transparent;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        border-radius: 4px;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+      .btn:focus,
+      .btn:active:focus {
+        outline: 5px auto -webkit-focus-ring-color;
+        outline-offset: -2px;
+      }
+      .btn-primary {
+        color: #fff;
+        background-color: #337ab7;
+        border-color: #2e6da4;
+      }
+      .btn-primary:focus {
+        color: #fff;
+        background-color: #286090;
+        border-color: #122b40;
+      }
+      .btn-primary:hover {
+        color: #fff;
+        background-color: #286090;
+        border-color: #204d74;
+      }
+      .btn-primary:active {
+        color: #fff;
+        background-color: #286090;
+        background-image: none;
+        border-color: #204d74;
+      }
+      .btn-primary:active:hover,
+      .btn-primary:active:focus {
+        color: #fff;
+        background-color: #204d74;
+        border-color: #122b40;
+      }
+
+      .container {
+        padding: 1px;
+        display: none;
+      }
+      .toast {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: auto;
+        max-width: 80%;
+        padding: 10px 20px;
+        transform: translateX(-50%);
+        text-align: center;
+        z-index: 9999;
+        font-size: 14px;
+        color: #fff;
+        border-radius: 2px;
+        margin-top: -20px;
+        background: rgba(0, 0, 0, 0.7);
+      }
+    </style>
+  </head>
+  <body>
+    <section id="detail" class="container">
+      <h1>接口详情</h1>
+      <form class="form" action="/admin/save" method="post">
+        <div class="form-group">
+          <input
+            type="hidden"
+            name="url"
+            placeholder="接口地址"
+            readonly="true"
+          />
+          <span class="txt"></span>
+        </div>
+        <div class="form-group">
+          <div id="jsoneditor" style="height: 400px"></div>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" type="submit">保存</button>
+        </div>
+      </form>
+    </section>
+    <section id="create" class="container">
+      <h1>新增一个接口</h1>
+      <form class="form-inline" action="/admin/save" method="post">
+        <div class="form-group">
+          <input
+            class="form-control"
+            type="text"
+            name="url"
+            placeholder="接口地址"
+          />
+        </div>
+        <div class="form-group">
+          <button class="btn btn-primary" type="submit">新增</button>
+        </div>
+      </form>
+    </section>
+    <div id="toast" class="toast"></div>
+    <script
+      src="https://code.jquery.com/jquery-3.6.0.min.js"
+      integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jsoneditor/9.5.7/jsoneditor.min.js"></script>
+    <script type="text/javascript">
+      $(() => {
+        var container = document.getElementById("jsoneditor");
+        var editor = new JSONEditor(container, {
+          mode: "code",
+          // mainMenuBar: false
+        });
+
+        function initViewWithParam(search) {
+          if (/url=(.+)?/.test(search)) {
+            let url = decodeURIComponent(RegExp.$1);
+            showDetailView(url);
+          } else {
+            showCreateView();
+          }
+        }
+
+        initViewWithParam(location.search);
+
+        $("#detail form").submit(function (e) {
+          e.preventDefault();
+          let { url } = getFormData($(this));
+          let content = editor.get();
+          saveFile(url, content).then((res) => {
+            console.log("保存成功");
+          });
+        });
+
+        $("#create form").submit(function (e) {
+          e.preventDefault();
+          let { url } = getFormData($(this));
+          if (!url) {
+            showToast("需要填写接口地址");
+            return;
+          }
+          getFile(url).then(
+            (res) => {
+              showToast("接口已存在");
+            },
+            (err) => {
+              saveFile(url, {}).then((res) => {
+                showToast("创建成功");
+                showDetailView(url, {});
+                history.replaceState(
+                  { url },
+                  "",
+                  `?url=${encodeURIComponent(url)}`
+                );
+              });
+            }
+          );
+        });
+
+        window.addEventListener("popstate", function (e) {
+          console.log(e.state);
+        });
+
+        function getFile(url) {
+          return $.ajax({
+            url: "/admin/getApi",
+            data: {
+              url,
+            },
+          });
+        }
+
+        function saveFile(url, content) {
+          return $.ajax({
+            url: "/admin/saveApi",
+            data: {
+              url,
+              content: JSON.stringify(content),
+            },
+            method: "post",
+          });
+        }
+
+        function getFormData($form) {
+          let formArray = $form.serializeArray();
+          let result = {};
+          formArray.forEach((item) => {
+            result[item.name] = item.value;
+          });
+          return result;
+        }
+
+        let toastTick = 0;
+        function showToast(msg) {
+          $("#toast").hide().fadeIn().text(msg);
+          if (toastTick) clearTimeout(toastTick);
+          toastTick = setTimeout(() => {
+            $("#toast").fadeOut();
+          }, 1500);
+        }
+
+        function showDetailView(url, content) {
+          $("#create").fadeOut();
+          $("#detail").fadeIn();
+          $("#detail .txt").text(url);
+          $('#detail input[name="url"]').val(url);
+          if (content) {
+            editor.set(content);
+          } else {
+            getFile(url).then((res) => {
+              editor.set(res);
+            });
+          }
+        }
+
+        function showCreateView(url, content) {
+          $("#create").fadeIn();
+          $("#detail").fadeOut();
+        }
+      });
+    </script>
+  </body>
+</html>

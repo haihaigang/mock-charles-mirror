@@ -13,7 +13,6 @@ function start() {
   app.listen(PORT, () => {
     console.log(`${process.env.name} server listen on ${PORT}`);
   });
-
 }
 
 start()
