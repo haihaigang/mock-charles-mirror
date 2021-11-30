@@ -1,0 +1,16 @@
+{
+  "name": "mock-charles-mirror",
+  "version": "1.0.0",
+  "description": "使用 charles mirror 保存的数据生成 mock 接口",
+  "main": "index.js",
+  "scripts": {
+    "start": "pm2 start ecosystem.local.config.cjs"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "ejs": "^3.1.6",
+    "express": "^4.17.1"
+  },
+  "type": "module"
+}

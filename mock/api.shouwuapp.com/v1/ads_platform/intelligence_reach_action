@@ -1,0 +1,1 @@
+{"code":0,"time":1638191098,"data":{"actions":[{"scene":"goods_detail","action":"view_time","view_time_action":{"duration":5000,"unit":"ms"}},{"scene":"search_page","action":"view_time","view_time_action":{"duration":2000,"unit":"ms"}},{"scene":"search_result","action":"view_time","view_time_action":{"duration":2000,"unit":"ms"}}]}}

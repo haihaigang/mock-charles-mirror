@@ -1,0 +1,1 @@
+{"code":0,"time":1638190999,"data":{"payment_methods":[{"payment_method":3,"title":"支付宝","desc":"","act_text":"\u003cspan style='color:#FF6D00;'\u003e(推荐)\u003c/span\u003e"},{"payment_method":0,"title":"微信支付","desc":"","act_text":""},{"payment_method":9,"title":"花呗","desc":"","act_text":""}],"default_method":-1,"folding_methods":[]}}
