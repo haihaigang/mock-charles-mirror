@@ -1,8 +1,18 @@
+
+/**
+ * 获取访问 mock 数据的域名，分别从 请求头 > 域名 > 默认
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ */
 export default function(req, res, next) {
-  if (checkValidatedDomain(req.hostname)) {
-    res.locals.mockDomain = req.hostname
+  let domain = req.hostname
+  if (req.headers['x-mock-domain']) {
+    domain = req.headers['x-mock-domain']
+  }
+  if (checkValidatedDomain(domain)) {
+    res.locals.mockDomain = domain
   } else {
-    res.locals.mockDomain = 'default'
     res.locals.mockDomain = 'api-qa.shouwuapp.com'
   }
 
