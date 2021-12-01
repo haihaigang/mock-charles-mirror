@@ -1,15 +1,17 @@
-import path from "path"
-const MOCK_ROOT_PATH = "../mock";
+import MockFile from "../models/MockFile.js";
 
-function getMockFileRootPath(res) {
-  return path.resolve(process.cwd(), MOCK_ROOT_PATH, res.locals.mockDomain || "");
+class MockFileService {
+  constructor(mockDomain, filePath) {
+    this.file = new MockFile(mockDomain, filePath)
+  }
+  
+  readFile() {
+    return this.file.readFile()
+  }
+
+  saveFile(data) {
+    return this.file.saveFile(data)
+  }
 }
 
-function getMockFilePathFromReq(res, reqPath) {
-  reqPath = reqPath.replace(/^\//, "");
-  return path.resolve(getMockFileRootPath(res), reqPath);
-}
-
-function readFile(mockFilePath) {
-  return fs.readFileSync(mockFilePath, { encoding: "utf-8" });
-}
+export default MockFileService
