@@ -21,6 +21,10 @@ export default function(req, res, next) {
       return false
     }
 
+    if (/^\d+\.\d+\.\d+\.\d+$/.test(domain)) {
+      return false
+    }
+
     return true
   }
 
