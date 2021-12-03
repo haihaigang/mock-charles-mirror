@@ -184,6 +184,7 @@
         </div>
         <div class="form-group">
           <button class="btn btn-primary" type="submit">新增</button>
+          <a id="go-edit" style="display: none;" href="#">去编辑</a>
         </div>
       </form>
     </section>
@@ -200,7 +201,14 @@
         var container = document.getElementById("jsoneditor");
         var editor = new JSONEditor(container, {
           mode: "code",
+          // mode: "tree",
+          modes: ["code", "tree"],
           // mainMenuBar: false
+          autocomplete: {
+      getOptions: function () {
+        return ['apple', 'cranberry', 'raspberry', 'pie', 'mango', 'mandarine', 'melon', 'appleton'];
+      }
+    }
         });
 
         function initViewWithParam(search) {
@@ -247,6 +255,7 @@
           getFile(url).then(
             (res) => {
               showToast("接口已存在");
+              $('#go-edit').attr('href', '?url=' + encodeURIComponent(url)).show()
             },
             (err) => {
               saveFile(url, {}).then((res) => {
@@ -261,6 +270,10 @@
             }
           );
         });
+
+        $('#create input[name="url"]').change(function(e){
+          $('#go-edit').hide()
+        })
 
         window.addEventListener("popstate", function (e) {
           console.log(e.state);
