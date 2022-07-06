@@ -65,13 +65,13 @@ class MockFile {
 }
 
 function _formatFilePath(filePath) {
-  filePath = _removeUnusedSep(filePath);
+  // filePath = _removeUnusedSlash(filePath);
   filePath = _encodeNameForCharles(filePath);
 
   return filePath;
 }
 
-function _removeUnusedSep(filePath) {
+function _removeUnusedSlash(filePath) {
   // req.path 至少含有一个 "/"，这里移除结尾 "/"
   filePath = filePath.replace(/\/$/, "");
   return filePath;

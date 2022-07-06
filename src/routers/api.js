@@ -25,12 +25,10 @@ router.all('*', (req, res, next) => {
     if (e.message.startsWith('EISDIR')) {
       // 是目录
       let files = getDirInfo(mfs.file);
-      let dirs = getDirLink(req.path);
+      appendParentDir(mfs.file, files)
       res.render(VIEWS_NAME_DIR, {
         files,
         dir: req.path,
-        dirs,
-        lastDir: dirs.length > 0 ? dirs[dirs.length - 1] : []
       });
     } else if (e.message.startsWith('ENOENT')) {
       // 文件不存在
@@ -48,19 +46,22 @@ function getDirInfo(mFile) {
   return files.map((file) => {
     let absolutePath = path.resolve(mFile.absoluteFilePath, file);
     let statInfo = fs.statSync(absolutePath);
+    let isFile = statInfo.isFile()
 
-    if (statInfo.isFile()) {
+    if (isFile) {
       file = decodeURIComponent(file)
+    } else {
+      file += '/'
     }
     
     let relPath = path.join(mFile.filePath, file)
 
     return {
-      file,
+      name: file,
       link: relPath,
-      isFile: statInfo.isFile(),
+      isFile,
       size: statInfo.size,
-      editLink: '/admin?url=' + encodeURIComponent(relPath)
+      editLink: isFile ? '/admin?url=' + encodeURIComponent(relPath) : ''
     }
   });
 }
@@ -79,10 +80,21 @@ function getDirLink(path) {
 
   return dirArr.map((dir, i) => {
     pDirArr.push(dir)
-    return {
-      name: `${slash}${dir}${(isEndsWithSlash && i === dirArr.length - 1) ? slash : ''}`,
-      link: `${slash}${pDirArr.join(slash)}${isEndsWithSlash ? slash : ''}`,
-    }
+    return [
+      `${slash}${dir}${(isEndsWithSlash && i === dirArr.length - 1) ? slash : ''}`,
+      `${slash}${pDirArr.join(slash)}${isEndsWithSlash ? slash : ''}`
+    ]
+  })
+}
+
+function appendParentDir(mFile, files) {
+  let name = "../"
+  files.splice(0, 0, {
+    name,
+    link: path.join(mFile.filePath, name),
+    isFile: false,
+    size: 0,
+    editLink: ''
   })
 }
 
