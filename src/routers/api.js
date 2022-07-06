@@ -27,7 +27,14 @@ router.all('*', (req, res, next) => {
     if (e.message.startsWith('EISDIR')) {
       // 是目录
       let files = getDirInfo(mfs.file);
-      res.render(VIEWS_NAME_DIR, { files, dir:req.path });
+      let dirs = getDirLink(req.path);
+      console.log(mfs.file)
+      res.render(VIEWS_NAME_DIR, {
+        files,
+        dir: req.path,
+        dirs,
+        lastDir: dirs.length > 0 ? dirs[dirs.length - 1] : []
+      });
     } else if (e.message.startsWith('ENOENT')) {
       // 文件不存在
       notFound(res)
@@ -63,6 +70,23 @@ function getDirInfo(mFile) {
 
 function notFound(res) {
   res.status(404).end("404"); 
+}
+
+// '/v1/name' => [['/v1', '/v1'], ['/name', '/v1/name']]
+// '/v1/name/' => [['/v1', '/v1/'], ['/name/', '/v1/name/']]
+function getDirLink(path) {
+  const slash = '/'
+  let isEndsWithSlash = path.endsWith(slash)
+  let dirArr = path.split(slash).filter(dir => !!dir)
+  let pDirArr = []
+
+  return dirArr.map((dir, i) => {
+    pDirArr.push(dir)
+    return {
+      name: `${slash}${dir}${(isEndsWithSlash && i === dirArr.length - 1) ? slash : ''}`,
+      link: `${slash}${pDirArr.join(slash)}${isEndsWithSlash ? slash : ''}`,
+    }
+  })
 }
 
 export default router

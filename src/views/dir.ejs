@@ -31,6 +31,9 @@
   </head>
   <body>
     <h1>Index of <%= dir%></h1>
+    <h1>
+      Index of <%dirs.forEach(function(dir){%><a href="<%= dir.link%>"><%= dir.name%></a><%})%>
+    </h1>
     <table>
       <%files.forEach(function(file){%>
           <tr>
