@@ -30,7 +30,6 @@
     </style>
   </head>
   <body>
-    <h1>Index of <%= dir%></h1>
     <h1>
       Index of <%dirs.forEach(function(dir){%><a href="<%= dir.link%>"><%= dir.name%></a><%})%>
     </h1>
@@ -39,7 +38,7 @@
           <tr>
             <td><i class="icon icon-<%= file.isFile ? '_page' : '_blank'%>"></i></td>
             <td class="file-size"><code><%=file.size%></code></td>
-            <td class="display-name"><a href="<%=file.link%>"><%=file.link%></a>
+            <td class="display-name"><a href="<%=file.link%>"><%=file.file%></a>
             <% if (file.isFile){%><a href="<%=file.editLink%>">编辑</a><%}%>
           </td>
           </tr>

@@ -25,11 +25,11 @@ class MockFile {
       MOCK_ROOT_PATH,
       this.mockDomain
     );
-    this.absoluteFilePath = path.resolve(this.rootPath, this.filePath);
+    this.absoluteFilePath = path.join(this.rootPath, this.filePath);
     const { dir, name } = path.parse(this.filePath);
     this.filename = name;
     this.pathname = dir;
-    this.absoluteParentPath = path.resolve(this.rootPath, this.pathname)
+    this.absoluteParentPath = path.join(this.rootPath, this.pathname)
   }
 
   readFile() {
@@ -72,8 +72,7 @@ function _formatFilePath(filePath) {
 }
 
 function _removeUnusedSep(filePath) {
-  // req.path 至少含有一个 "/"，这里移除开头和结尾 "/"
-  filePath = filePath.replace(/^\//, "");
+  // req.path 至少含有一个 "/"，这里移除结尾 "/"
   filePath = filePath.replace(/\/$/, "");
   return filePath;
 }

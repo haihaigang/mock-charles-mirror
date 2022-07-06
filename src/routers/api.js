@@ -7,13 +7,11 @@ const router = express.Router()
 const VIEWS_NAME_DIR = "dir";
 
 router.use((req, res, next) => {
-  console.log('api middleware')
+  console.log(`====== start ${req.originalUrl}`);
   next()
 })
 
 router.all('*', (req, res, next) => {
-  console.log(`====== start ${req.originalUrl}`);
-
   let mfs = new MockFileService(res.locals.mockDomain, req.originalUrl)
 
   if (!fs.existsSync(mfs.file.absoluteParentPath)) {
@@ -28,7 +26,6 @@ router.all('*', (req, res, next) => {
       // 是目录
       let files = getDirInfo(mfs.file);
       let dirs = getDirLink(req.path);
-      console.log(mfs.file)
       res.render(VIEWS_NAME_DIR, {
         files,
         dir: req.path,
@@ -51,20 +48,20 @@ function getDirInfo(mFile) {
   return files.map((file) => {
     let absolutePath = path.resolve(mFile.absoluteFilePath, file);
     let statInfo = fs.statSync(absolutePath);
-    let link = file + "/";
 
     if (statInfo.isFile()) {
-      link = decodeURIComponent(file);
+      file = decodeURIComponent(file)
     }
-
-    let relPath = path.join(mFile.filePath, link)
+    
+    let relPath = path.join(mFile.filePath, file)
 
     return {
-      link,
+      file,
+      link: relPath,
       isFile: statInfo.isFile(),
       size: statInfo.size,
       editLink: '/admin?url=' + encodeURIComponent(relPath)
-    };
+    }
   });
 }
 
