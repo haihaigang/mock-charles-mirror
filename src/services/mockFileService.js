@@ -16,7 +16,7 @@ class MockFileService {
 
   readDirs() {
     let files = this.file.readDirs()
-    return files.map(file => {
+    return files.filter(file => !file.startsWith('.')).map(file => {
       return new MockFile(this.file.mockDomain, path.join(this.file.filePath, file))
     })
   }

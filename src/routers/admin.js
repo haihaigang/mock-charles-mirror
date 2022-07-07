@@ -1,11 +1,12 @@
 import express from "express"
+import path from 'path'
 import MockFileService from "../services/mockFileService.js"
 
 const router = express.Router()
 const VIEWS_NAME_ADMIN = 'admin'
 
 router.use((req, res, next) => {
-  console.log('admin middleware', req.originalUrl)
+  console.log('admin middleware', req.originalUrl, req.query, req.body)
   next()
 })
 
@@ -16,7 +17,6 @@ router.all('/', (req, res, next) => {
 router.get('/getApi', (req, res, next) => {
   let { url } = req.query
   if (!url) throw new Error('参数错误，缺少参数 url')
-  console.log(url)
 
     let mfs = new MockFileService(res.locals.mockDomain, url)
     res.json(mfs.readFile())
@@ -39,6 +39,16 @@ router.post('/saveApi', (req, res, next) => {
   let mfs = new MockFileService(res.locals.mockDomain, url)
   mfs.saveFile(content)
 
+  res.json({})
+})
+
+router.post('/saveDir', (req, res, next) => {
+  let { dir, url } = req.body
+  if (!dir) throw new Error('参数错误，缺少参数 dir')
+  if (!url) throw new Error('参数错误，缺少参数 url')
+  
+  let mfs = new MockFileService(res.locals.mockDomain, path.join(dir, url))
+  mfs.file.mkdir()
   res.json({})
 })
 

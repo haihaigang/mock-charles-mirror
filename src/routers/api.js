@@ -1,5 +1,4 @@
 import express from "express"
-import fs from "fs";
 import path from "path";
 import MockFileService from "../services/mockFileService.js";
 
@@ -32,7 +31,8 @@ router.all('*', (req, res, next) => {
   let files = getFiles(mfs)
   res.render(VIEWS_NAME_DIR, {
     files,
-    dir: req.path
+    dir: req.path,
+    mockDomain: res.locals.mockDomain
   })
 });
 

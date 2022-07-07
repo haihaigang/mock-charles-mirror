@@ -92,6 +92,10 @@ class MockFile {
   readDirs() {
     return fs.readdirSync(this.absoluteFilePath)
   }
+
+  mkdir() {
+    return fs.mkdirSync(this.absoluteFilePath, { recursive: true})
+  }
 }
 
 function _formatFilePath(filePath) {
