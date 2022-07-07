@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { formatByteSize } from '../common/formatByteSize.js'
 const MOCK_ROOT_PATH = "../mock";
 
 class MockFile {
@@ -39,9 +40,11 @@ class MockFile {
     let statInfo = this.statFile(this.absoluteFilePath)
     this.isNotExist = !statInfo
     if (statInfo) {
+      this.mtime = statInfo.mtime
       if (statInfo.isFile()) {
         this.isFile = true
         this.fileSize = statInfo.size
+        this.fileSizeStr = formatByteSize(this.fileSize)
         this.editLink = '/admin?url=' + encodeURIComponent(this.filePath)
         this.filename += ext
       } else {
