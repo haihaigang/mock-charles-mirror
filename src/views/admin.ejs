@@ -232,7 +232,9 @@
             }
             let content = editor.get();
             saveFile(url, content).then((res) => {
-              showToast("保存成功");
+              showToast("保存成功", () => {
+                history.back()
+              });
             });
           })
         });
@@ -309,11 +311,12 @@
         }
 
         let toastTick = 0;
-        function showToast(msg) {
+        function showToast(msg, fn) {
           $("#toast").hide().fadeIn().text(msg);
           if (toastTick) clearTimeout(toastTick);
           toastTick = setTimeout(() => {
             $("#toast").fadeOut();
+            fn && fn()
           }, 1500);
         }
 
