@@ -34,6 +34,33 @@
         border: none;
         outline: none;
       }
+      #domain-list {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: rgba(0,0,0,0.4);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      #domain-list div {
+        margin: 0;
+        padding: 10px 0;
+        background-color: #fff;
+        border-radius: 10px;
+      }
+      #domain-list a {
+        display: block;
+        list-style: none;
+        padding: 10px 20px;
+      }
+      #domain-list a:hover {
+        background-color: rgba(0,0,0,0.4);
+        color: #fff;
+      }
+
     </style>
   </head>
   <body>
@@ -76,7 +103,8 @@
     </table>
 
     <br />
-    <p>Mock Charles Mirror @<%= mockDomain%></p>
+    <p>Mock Charles Mirror <a href="#" id="btn-change-doamin">@<%= mockDomain%></a></p>
+    <div id="domain-list" style="display: none;"></div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript">
@@ -127,6 +155,35 @@
           });
           return result;
         }
+      
+      $('#btn-change-doamin').click(function(e){
+        e.preventDefault()
+        $.ajax({
+          url: '/admin/getMockDomains'
+        }).then(function (res) {
+          let html = ''
+          res.forEach(function (name) {
+            html += `<a href="#">${name}</a>`
+          })
+          $('#domain-list').html(`<div>${html}</div>`).show()
+        })
+      })
+      $('#domain-list').on('click', 'a', function(e){
+        e.preventDefault()
+        e.stopPropagation()
+        $.ajax({
+          url: '/admin/changeMockDomain',
+          data: {
+            domain: e.target.innerHTML
+          },
+          type: 'POST'
+        }).then(function (res) {
+          location.reload()
+        })
+      })
+      $('#domain-list').click(function(){
+        $(this).hide()
+      })
     </script>
   </body>
 </html>

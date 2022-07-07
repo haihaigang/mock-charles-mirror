@@ -1,3 +1,4 @@
+import MockDomain from '../models/MockDomain.js'
 
 /**
  * 获取访问 mock 数据的域名，分别从 请求头 > 域名 > 默认
@@ -14,7 +15,7 @@ export default function(req, res, next) {
     res.locals.mockDomain = domain
   } else {
     // res.locals.mockDomain = 'api-qa.shouwuapp.com'
-    res.locals.mockDomain = 'default'
+    res.locals.mockDomain = MockDomain.get()
   }
 
   function checkValidatedDomain(domain) {
