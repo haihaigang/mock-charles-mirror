@@ -41,7 +41,7 @@
             <td><i class="icon icon-<%= file.isFile ? '_page' : '_blank'%>"></i></td>
             <td class="file-size"><% if (file.isFile){%><code><%=file.fileSize%></code><%}%></td>
             <td class="display-name"><a href="<%=file.filePath%>"><%=file.filename%></a>
-            <% if (file.isFile){%><a href="<%=file.editLink%>">编辑</a><%}%>
+            <% if (file.isFile){%><a href="<%=file.editLink%>" title="编辑">...</a><%}%>
           </td>
           </tr>
       <%})%>
@@ -52,7 +52,7 @@
         <td class="display-name">
             <a href="/admin" title="添加一个目录" id="btn-add-dir">++添加目录++</a>
             <form id="form-add-dir" style="display: none;" action="/admin/saveDir">
-              <input class="form-control" type="text" name="url" placeholder="输入一个目录名称" autocomplete="false" />
+              <input class="form-control" type="text" name="url" placeholder="输入一个目录名称" autocomplete="off" />
               <input class="form-control" type="hidden" name="dir" value="<%= dir%>" />
             </form>
           </td>
@@ -64,7 +64,7 @@
           <td class="display-name">
             <a href="/admin" title="添加一个文件" id="btn-add-file">++添加文件++</a>
             <form id="form-add-file" style="display: none;" action="/admin/saveApi">
-              <input class="form-control" type="text" name="url" placeholder="输入一个文件名称" autocomplete="false" />
+              <input class="form-control" type="text" name="url" placeholder="输入一个文件名称" autocomplete="off" />
               <input class="form-control" type="hidden" name="content" value="{}" />
           </form>
         </td>
@@ -72,7 +72,7 @@
     </table>
 
     <br />
-    <p>Mock Domain <%= mockDomain%></p>
+    <p>Mock Charles Mirror @<%= mockDomain%></p>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript">
@@ -90,6 +90,9 @@
             $form.hide()
             $btn.show()
           }
+        }).blur(function(e) {
+          $form.hide()
+          $btn.show()
         })
 
         $form.submit(function (e) {
