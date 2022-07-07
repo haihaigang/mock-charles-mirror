@@ -5,7 +5,7 @@ const router = express.Router()
 const VIEWS_NAME_ADMIN = 'admin'
 
 router.use((req, res, next) => {
-  console.log('admin middleware')
+  console.log('admin middleware', req.originalUrl)
   next()
 })
 

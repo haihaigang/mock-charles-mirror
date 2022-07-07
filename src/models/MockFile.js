@@ -14,6 +14,10 @@ class MockFile {
     this.absoluteFilePath = "";
     this.pathname = "";
     this.filename = "";
+    this.fileSize = 0;
+    this.isFile = false;
+    this.editLink = '';
+    this.isNotExist = true;
 
     this.init(filePath);
   }
@@ -25,17 +29,31 @@ class MockFile {
       MOCK_ROOT_PATH,
       this.mockDomain
     );
-    this.absoluteFilePath = path.join(this.rootPath, this.filePath);
-    const { dir, name } = path.parse(this.filePath);
-    this.filename = name;
-    this.pathname = dir;
+    this.absoluteFilePath = path.join(this.rootPath, _encodeNameForCharles(this.filePath))
+    
+    const { dir, name } = path.parse(this.filePath)
+    this.filename = name
+    this.pathname = dir
     this.absoluteParentPath = path.join(this.rootPath, this.pathname)
+    
+    let statInfo = this.statFile(this.absoluteFilePath)
+    this.isNotExist = !statInfo
+    if (statInfo) {
+      if (statInfo.isFile()) {
+        this.isFile = true
+        this.fileSize = statInfo.size
+        this.editLink = '/admin?url=' + encodeURIComponent(this.filePath)
+      } else {
+        this.filePath = this.filePath + '/'
+        this.filename = name + '/'
+      }
+    }
   }
 
   readFile() {
     let data = fs.readFileSync(this.absoluteFilePath, {
-      encoding: MockFile.ENCODING,
-    });
+      encoding: MockFile.ENCODING
+    })
     return JSON.parse(data);
   }
 
@@ -53,7 +71,7 @@ class MockFile {
 
   tryMkdir() {
     try {
-      fs.mkdirSync(this.absoluteParentPath);
+      fs.mkdirSync(this.absoluteParentPath, { recursive: true})
     } catch (e) {
       if (e.code === "EEXIST") {
         // console.log(`mkdir error: exists ${this.absoluteParentPath}`);
@@ -62,11 +80,24 @@ class MockFile {
       }
     }
   }
+
+  statFile() {
+    if (fs.existsSync(this.absoluteFilePath)) {
+      return fs.statSync(this.absoluteFilePath)
+    }
+
+    return null
+  }
+
+  readDirs() {
+    return fs.readdirSync(this.absoluteFilePath)
+  }
 }
 
 function _formatFilePath(filePath) {
   // filePath = _removeUnusedSlash(filePath);
-  filePath = _encodeNameForCharles(filePath);
+  // filePath = _encodeNameForCharles(filePath);
+  filePath = decodeURIComponent(filePath)
 
   return filePath;
 }
@@ -87,7 +118,7 @@ function _encodeNameForCharles(filePath) {
   if (urls.length === 2) {
     filePath = urls[0] + encodeURIComponent("?" + urls[1]).toLowerCase();
   }
-  return filePath;
+  return filePath
 }
 
 export default MockFile;

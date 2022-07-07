@@ -14,88 +14,43 @@ router.use((req, res, next) => {
 router.all('*', (req, res, next) => {
   let mfs = new MockFileService(res.locals.mockDomain, req.originalUrl)
 
-  if (!fs.existsSync(mfs.file.absoluteParentPath)) {
-    return notFound(res)
+  // 目录不存在
+  if (mfs.isNotExist()) {
+    notFound(res)
+    return
   }
 
-  try {
+  // 文件
+  if (mfs.isFile()) {
     let data = mfs.readFile()
-    res.json(data);
-  } catch(e) {
-    if (e.message.startsWith('EISDIR')) {
-      // 是目录
-      let files = getDirInfo(mfs.file);
-      appendParentDir(mfs.file, files)
-      res.render(VIEWS_NAME_DIR, {
-        files,
-        dir: req.path,
-      });
-    } else if (e.message.startsWith('ENOENT')) {
-      // 文件不存在
-      notFound(res)
-    } else throw e
+    res.json(data)
+    res.end()
+    return
   }
+
+  // 目录
+  let files = getFiles(mfs)
+  res.render(VIEWS_NAME_DIR, {
+    files,
+    dir: req.path
+  })
 });
 
 /**
  * 获取目录下的文件信息
  * @returns
  */
-function getDirInfo(mFile) {
-  let files = fs.readdirSync(mFile.absoluteFilePath);
-  return files.map((file) => {
-    let absolutePath = path.resolve(mFile.absoluteFilePath, file);
-    let statInfo = fs.statSync(absolutePath);
-    let isFile = statInfo.isFile()
+function getFiles(mfs) {
+  let files = mfs.readDirs()
+  let last = mfs.getParentDir()
+  files.splice(0, 0, last)
 
-    if (isFile) {
-      file = decodeURIComponent(file)
-    } else {
-      file += '/'
-    }
-    
-    let relPath = path.join(mFile.filePath, file)
-
-    return {
-      name: file,
-      link: relPath,
-      isFile,
-      size: statInfo.size,
-      editLink: isFile ? '/admin?url=' + encodeURIComponent(relPath) : ''
-    }
-  });
+  return files
 }
 
 function notFound(res) {
   res.status(404).end("404"); 
-}
-
-// '/v1/name' => [['/v1', '/v1'], ['/name', '/v1/name']]
-// '/v1/name/' => [['/v1', '/v1/'], ['/name/', '/v1/name/']]
-function getDirLink(path) {
-  const slash = '/'
-  let isEndsWithSlash = path.endsWith(slash)
-  let dirArr = path.split(slash).filter(dir => !!dir)
-  let pDirArr = []
-
-  return dirArr.map((dir, i) => {
-    pDirArr.push(dir)
-    return [
-      `${slash}${dir}${(isEndsWithSlash && i === dirArr.length - 1) ? slash : ''}`,
-      `${slash}${pDirArr.join(slash)}${isEndsWithSlash ? slash : ''}`
-    ]
-  })
-}
-
-function appendParentDir(mFile, files) {
-  let name = "../"
-  files.splice(0, 0, {
-    name,
-    link: path.join(mFile.filePath, name),
-    isFile: false,
-    size: 0,
-    editLink: ''
-  })
+  res.end()
 }
 
 export default router

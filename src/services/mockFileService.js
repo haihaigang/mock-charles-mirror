@@ -1,4 +1,5 @@
 import MockFile from "../models/MockFile.js";
+import path from 'path'
 
 class MockFileService {
   constructor(mockDomain, filePath) {
@@ -11,6 +12,32 @@ class MockFileService {
 
   saveFile(data) {
     return this.file.saveFile(data)
+  }
+
+  readDirs() {
+    let files = this.file.readDirs()
+    return files.map(file => {
+      return new MockFile(this.file.mockDomain, path.join(this.file.filePath, file))
+    })
+  }
+
+  getParentDir() {
+    let filename = '../'
+    return {
+      filename,
+      filePath: path.join(this.file.filePath, filename),
+      isFile: false,
+      fileSize: 0,
+      editLink: ''
+    }
+  }
+
+  isNotExist() {
+    return this.file.isNotExist
+  }
+
+  isFile() {
+    return this.file.isFile
   }
 }
 
