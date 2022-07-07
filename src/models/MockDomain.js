@@ -1,5 +1,5 @@
 
-let __domain = 'default'
+let __domain = 'api.example.com'
 export default {
   set(domain) {
     __domain = domain

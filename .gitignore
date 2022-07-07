@@ -1,5 +1,5 @@
 node_modules
 .DS_Store
 mock/**
-!mock/default
-!mock/default/**
+!mock/api.example.com
+!mock/api.example.com/**
