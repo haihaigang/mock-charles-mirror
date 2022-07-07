@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import moment from "moment";
 import { formatByteSize } from '../common/formatByteSize.js'
 const MOCK_ROOT_PATH = "../mock";
 
@@ -40,7 +41,7 @@ class MockFile {
     let statInfo = this.statFile(this.absoluteFilePath)
     this.isNotExist = !statInfo
     if (statInfo) {
-      this.mtime = statInfo.mtime
+      this.mtimeStr = moment(statInfo.mtime).format('YYYY-MM-DD hh:mm:ss')
       if (statInfo.isFile()) {
         this.isFile = true
         this.fileSize = statInfo.size

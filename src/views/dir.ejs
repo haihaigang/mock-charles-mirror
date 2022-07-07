@@ -20,6 +20,9 @@
       td.display-name {
         padding-left: 1em;
       }
+      td.last-modified {
+        padding-left: 1em;
+      }
       i.icon-_blank {
         background-image: url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAWBJREFUeNqEUj1LxEAQnd1MVA4lyIEWx6UIKEGUExGsbC3tLfwJ/hT/g7VlCnubqxXBwg/Q4hQP/LhKL5nZuBsvuGfW5MGyuzM7jzdvVuR5DgYnZ+f99ai7Vt5t9K9unu4HLweI3qWYxI6PDosdy0fhcntxO44CcOBzPA7mfEyuHwf7ntQk4jcnywOxIlfxOCNYaLVgb6cXbkTdhJXq2SIlNMC0xIqhHczDbi8OVzpLSUa0WebRfmigLHqj1EcPZnwf7gbDIrYVRyEinurj6jTBHyI7pqVrFQqEbt6TEmZ9v1NRAJNC1xTYxIQh/MmRUlmFQE3qWOW1nqB2TWk1/3tgJV0waVvkFIEeZbHq4ElyKzAmEXOx6gnEVJuWBzmkRJBRPYGZBDsVaOlpSgVJE2yVaAe/0kx/3azBRO0VsbMFZE3CDSZKweZfYIVg+DZ6v7h9GDVOwZPw/PoxKu/fAgwALbDAXf7DdQkAAAAASUVORK5CYII=");
       }
@@ -39,8 +42,8 @@
       <%files.forEach(function(file){%>
           <tr>
             <td><i class="icon icon-<%= file.isFile ? '_page' : '_blank'%>"></i></td>
-            <td class="last-modified"></td>
-            <td class="file-size"><% if (file.isFile){%><code><%=file.fileSizeStr%></code><%}%></td>
+            <td class="last-modified"><%= file.mtimeStr%></td>
+            <td class="file-size"><code><% if (file.isFile){%><%=file.fileSizeStr%><%}%></code></td>
             <td class="display-name"><a href="<%=file.filePath%>"><%=file.filename%></a>
             <% if (file.isFile){%><a href="<%=file.editLink%>" title="编辑">...</a><%}%>
           </td>
@@ -49,7 +52,7 @@
       <tr>
         <td><i class="icon"></i></td>
         <td class="last-modified"></td>
-        <td class="file-size"></td>
+        <td class="file-size"><code></code></td>
         <td class="display-name">
             <a href="/admin" title="添加一个目录" id="btn-add-dir">++添加目录++</a>
             <form id="form-add-dir" style="display: none;" action="/admin/saveDir">
@@ -61,7 +64,7 @@
         <tr>
           <td><i class="icon"></i></td>
           <td class="last-modified"></td>
-          <td class="file-size"></td>
+          <td class="file-size"><code></code></td>
           <td class="display-name">
             <a href="/admin" title="添加一个文件" id="btn-add-file">++添加文件++</a>
             <form id="form-add-file" style="display: none;" action="/admin/saveApi">
