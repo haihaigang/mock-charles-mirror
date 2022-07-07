@@ -6,10 +6,7 @@ import MockDomain from '../models/MockDomain.js'
 const router = express.Router()
 
 router.get('/getMockDomains', (req, res, next) => {
-  let files = fs.readdirSync(path.resolve(process.cwd(), '../mock'))
-  if (files) {
-    files = files.filter(file => !["README.md"].includes(file))
-  }
+  let files =getMockDomains()
   res.json(files)
 })
 
@@ -17,8 +14,19 @@ router.post('/changeMockDomain', (req, res, next) => {
   let { domain } = req.body
   if (!domain) throw new Error('参数错误，缺少参数 domain')
 
+  let domains = getMockDomains()
+  if (!domains.includes(domain)) throw new Error('参数错误，domain 不在可选范围')
+
   MockDomain.set(domain)
   res.json({})
 })
+
+function getMockDomains() {
+  let files = fs.readdirSync(path.resolve(process.cwd(), '../mock'))
+  if (files) {
+    files = files.filter(file => !['README.md'].includes(file))
+  }
+  return files
+}
 
 export default router

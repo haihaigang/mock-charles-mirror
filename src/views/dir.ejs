@@ -66,6 +66,10 @@
         background-color: rgba(0,0,0,0.7);
         color: #fff;
       }
+      #domain-list a.on {
+        color: red;
+        font-weight: bold;
+      }
 
     </style>
   </head>
@@ -114,6 +118,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript">
+      let currentDomain = '<%= mockDomain%>'
       function setupForm($btn) {
         var $form = $btn.next()
         $btn.click(function (e) {
@@ -169,14 +174,23 @@
         }).then(function (res) {
           let html = ''
           res.forEach(function (name) {
-            html += `<a href="#">${name}</a>`
+            html += `<a href="#" class="${currentDomain === name ? "on" : "off"}">${name}</a>`
           })
+          html += `<a href="#" class="tools" contenteditable>add new one</a>`
           $('#domain-list').show().find('div').html(html)
         })
       })
       $('#domain-list').on('click', 'a', function(e){
         e.preventDefault()
         e.stopPropagation()
+        if ($(this).hasClass('on')) {
+          return
+        }
+
+        if ($(this).hasClass('tools')) {
+          return
+        }
+
         $.ajax({
           url: '/admin/changeMockDomain',
           data: {
