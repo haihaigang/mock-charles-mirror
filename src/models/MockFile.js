@@ -31,7 +31,7 @@ class MockFile {
     );
     this.absoluteFilePath = path.join(this.rootPath, _encodeNameForCharles(this.filePath))
     
-    const { dir, name } = path.parse(this.filePath)
+    const { dir, name, ext } = path.parse(this.filePath)
     this.filename = name
     this.pathname = dir
     this.absoluteParentPath = path.join(this.rootPath, this.pathname)
@@ -43,6 +43,7 @@ class MockFile {
         this.isFile = true
         this.fileSize = statInfo.size
         this.editLink = '/admin?url=' + encodeURIComponent(this.filePath)
+        this.filename += ext
       } else {
         this.filePath = this.filePath + '/'
         this.filename = name + '/'
