@@ -6,6 +6,9 @@
     <title>Index of <%= dir%></title>
     <link rel="icon" type="favicon" href="/static/favicon.ico" />
     <style type="text/css">
+      html,body {
+        height: 100%;;
+      }
       i.icon {
         display: block;
         height: 16px;
@@ -35,12 +38,16 @@
         border: none;
         outline: none;
       }
+      a:hover {
+        color: #f00;
+      }
       #domain-list {
         position: fixed;
         top: 0;
         left: 0;
         right: 0;
         bottom: 0;
+        z-index: 99;
         background-color: rgba(0,0,0,0.7);
         display: flex;
         align-items: center;
@@ -48,30 +55,108 @@
         flex-direction: column;
       }
       #domain-list p {
-        color: #fff;
         margin: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
       }
       #domain-list div {
         min-width: 200px;
+        max-height: 80vh;
         margin: 0;
         padding: 10px 0;
-        background-color: #fff;
         border-radius: 10px;
+        overflow-y: auto;
+        background-color: #fff;
       }
       #domain-list a {
+        position: relative;
         display: block;
         list-style: none;
         padding: 10px 20px;
-      }
-      #domain-list a:hover {
-        background-color: rgba(0,0,0,0.7);
-        color: #fff;
       }
       #domain-list a.on {
         color: red;
         font-weight: bold;
       }
+      #domain-list a.on::after {
+        position: absolute;
+        top: 15px;
+        left: 8px;
+        content: "@";
+        font-size: 12px;
+        color: #ddd;
+      }
 
+      .dialog-tools {
+        position: absolute;
+        top: 22px;
+        right: 22px;
+        z-index: 9;
+      }
+      .dialog-tools-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 44px;
+        height: 44px;
+        color: #57606a;
+        border-radius: 5px;
+        border-radius: 5px 5px 0 0;
+        cursor: pointer;
+      }
+
+      .dialog-tools-btn:hover {
+        background-color: #efefef;
+      }
+      .dialog-tools-btn.on{
+        background-color: #e6e6e6;
+      }
+      .dialog-tools-list {
+        position: absolute;
+        top: 44px;
+        right: 0;
+        display: none;
+        min-width: 100px;
+        padding: 7px 0;
+        background-color: #e6e6e6;
+        box-shadow: -2px 2px 5px rgb(230 230 230 / 80%);
+        border-radius: 5px 0 5px 5px;
+      }
+      .dialog-tools-list a {
+        display: block;
+        padding: 7px 10px;
+        text-align: center;
+      }
+
+      #domain-add {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 99;
+        background-color: rgba(0,0,0,0.7);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+      }
+      #domain-add p {
+        margin: 0;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #eee;
+        text-align: center;
+      }
+      #domain-add div {
+        min-width: 200px;
+        max-height: 80vh;
+        margin: 0;
+        padding: 10px 0;
+        border-radius: 10px;
+        overflow-y: auto;
+        background-color: #fff;
+      }
     </style>
   </head>
   <body>
@@ -115,7 +200,30 @@
 
     <br />
     <p>Mock Charles Mirror <a href="#" id="btn-change-doamin">@<%= mockDomain%></a></p>
-    <div id="domain-list" style="display: none;"><p>点击可切换不同域名</p><div></div></div>
+    <div id="domain-list" style="display: none;"><div></div></div>
+    <div id="tools" class="dialog-tools">
+      <summary class="dialog-tools-btn btn-octicon">
+        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
+          class="octicon octicon-list-unordered">
+          <path fill-rule="evenodd"
+            d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z">
+          </path>
+        </svg>
+      </summary>
+      <div class="dialog-tools-list">
+        <a href="#" data-action="add-domain">新增域名</a>
+        <a href="#" data-action="open-domain">切换域名</a>
+        <a href="/admin">新增接口</a>
+      </div>
+    </div>
+    <div id="domain-add" style="display: none;">
+      <div>
+        <p>新增一个域名</p>
+        <form id="form-add-domain" action="/admin/addMockDomain">
+          <input class="form-control" type="text" name="domain" placeholder="输入一个域名名称" autocomplete="off" />
+        </form>
+      </div>
+    </div>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"
       integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
     <script type="text/javascript">
@@ -167,28 +275,27 @@
           });
           return result;
         }
-      
-      $('#btn-change-doamin').click(function(e){
-        e.preventDefault()
+
+      function openDomain(params) {
         $.ajax({
           url: '/admin/getMockDomains'
         }).then(function (res) {
-          let html = ''
+          let html = '<p>点击可切换不同域名</p>'
           res.forEach(function (name) {
             html += `<a href="#" class="${currentDomain === name ? "on" : "off"}">${name}</a>`
           })
-          html += `<a href="#" class="tools" contenteditable>add new one</a>`
           $('#domain-list').show().find('div').html(html)
         })
+      }
+      
+      $('#btn-change-doamin').click(function(e){
+        e.preventDefault()
+        openDomain()
       })
       $('#domain-list').on('click', 'a', function(e){
         e.preventDefault()
         e.stopPropagation()
         if ($(this).hasClass('on')) {
-          return
-        }
-
-        if ($(this).hasClass('tools')) {
           return
         }
 
@@ -205,6 +312,51 @@
       $('#domain-list').click(function(){
         $(this).hide()
       })
+
+      $('#tools').click(function(e) {
+        e.stopPropagation()
+      })
+
+      $('.dialog-tools-btn').click(function(e) {
+        $(this).toggleClass('on')
+        $('.dialog-tools-list').toggle()
+      })
+      $('body').click(function(e) {
+        $('.dialog-tools-btn').removeClass('on')
+        $('.dialog-tools-list').hide()
+      })
+
+      $('#tools').on('click', '.dialog-tools-list a', function(e){
+        e.preventDefault()
+        let action = $(this).data('action')
+        switch (action) {
+          case 'add-domain':
+            $('#domain-add').show()
+            break;
+          case 'open-domain':
+            openDomain()
+            break;
+        
+          default:
+            break;
+        }
+      })
+
+      $('#domain-add form').submit(function (e) {
+          e.preventDefault()
+
+          let formData = getFormData($(this))
+
+          if (!formData.domain) return
+
+          return $.ajax({
+            url: $(this).attr('action'),
+            data: formData,
+            method: "post",
+          }).then(function (res) {
+            location.reload()
+          });
+        })
     </script>
   </body>
 </html>
