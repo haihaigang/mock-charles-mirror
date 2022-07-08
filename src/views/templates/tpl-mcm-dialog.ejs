@@ -1,0 +1,64 @@
+<template id="tpl-mcm-dialog">
+  <style>
+    .mcm-dialog-mask {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 90;
+      background-color: rgba(0, 0, 0, 0.7);
+    }
+
+    .mcm-dialog-title {
+      margin: 0;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: center;
+    }
+
+    .mcm-dialog-wrapper {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      z-index: 99;
+      transform: translate(-50%, -50%);
+      min-width: 200px;
+      max-height: 80vh;
+      margin: 0;
+      padding: 10px 0;
+      border-radius: 10px;
+      background-color: #fff;
+    }
+    .mcm-dialog-content {
+      
+      overflow-y: auto;
+    }
+    .mcm-dialog-close {
+      position: absolute;
+      left: 50%;
+      bottom: -64px;
+      width: 40px;
+      height: 40px;
+      font-size: 40px;
+      line-height: 1em;
+      color: #fff;
+      transform: rotate(45deg) translateX(-50%);
+      transform-origin: 50% 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+    }
+  </style>
+  <div class="mcm-dialog-mask" style="display: none;"></div>
+  <div class="mcm-dialog-wrapper" style="display: none;">
+    <p class="mcm-dialog-title">
+      <slot name="title"></slot>
+    </p>
+    <div class="mcm-dialog-content">
+      <slot name="content"></slot>
+    </div>
+    <span class="mcm-dialog-close">+</span>
+  </div>
+</template>
