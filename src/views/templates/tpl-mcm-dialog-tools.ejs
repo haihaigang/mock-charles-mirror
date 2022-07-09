@@ -1,0 +1,58 @@
+<template id="tpl-mcm-dialog-tools">
+  <style>
+    .dialog-tools {
+      position: absolute;
+      top: 22px;
+      right: 22px;
+      z-index: 9;
+    }
+    .dialog-tools-btn {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 44px;
+      height: 44px;
+      color: #57606a;
+      border-radius: 5px;
+      border-radius: 5px 5px 0 0;
+      cursor: pointer;
+    }
+
+    .dialog-tools-btn:hover {
+      background-color: #efefef;
+    }
+    .dialog-tools-btn.on{
+      background-color: #e6e6e6;
+    }
+    .dialog-tools-list {
+      position: absolute;
+      top: 44px;
+      right: 0;
+      display: none;
+      min-width: 100px;
+      padding: 7px 0;
+      background-color: #e6e6e6;
+      box-shadow: -2px 2px 5px rgb(230 230 230 / 80%);
+      border-radius: 5px 0 5px 5px;
+    }
+    .dialog-tools-list a {
+      display: block;
+      padding: 7px 10px;
+      text-align: center;
+    }
+  </style>
+  <div id="tools" class="dialog-tools">
+    <summary class="dialog-tools-btn">
+      <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true">
+        <path fill-rule="evenodd"
+          d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z">
+        </path>
+      </svg>
+    </summary>
+    <div class="dialog-tools-list">
+      <a href="#" data-action="add-domain">新增域名</a>
+      <a href="#" data-action="open-domain">切换域名</a>
+      <a href="/admin">新增接口</a>
+    </div>
+  </div>
+</template>

@@ -11,24 +11,28 @@ class McmBtnAdd extends HTMLElement {
     let btnTitle = this.getAttribute('btn-title')
     this.btnDom.textContent = btnText
     this.btnDom.setAttribute('title', btnTitle)
-    this.btnDom.addEventListener('click', this.show.bind(this))
+    this.btnDom.addEventListener('click', this.open.bind(this))
     
     this.formDom = this.shadowRoot.querySelector('form')
     let formAction = this.getAttribute('data-action')
     this.formDom.setAttribute('action', formAction)
     this.formDom.addEventListener('submit', this.onSubmit.bind(this))
 
-    console.log(this.formDom.children)
-    // this.shadowRoot.querySelector('input')
-    //   .addEventListener('keyup', this.onKeyup.bind(this))
-    // this.shadowRoot.querySelector('input').addEventListener('blur', this.close.bind(this))
+    let dataPlaceholder = this.getAttribute('data-placeholder')
+    this.inputDom = this.formDom.querySelector('input[name="url"]')
+    this.inputDom.setAttribute('placeholder', dataPlaceholder)
+    this.inputDom.addEventListener('keyup', this.onKeyup.bind(this))
+    this.inputDom.addEventListener('blur', this.close.bind(this))
+
+    let dataOtherName = this.getAttribute('data-other-name')
+    let dataOtherValue = this.getAttribute('data-other-value')
+    this.formDom.appendChild(createHiddenInput(dataOtherName, dataOtherValue))
   }
 
-  show(e) {
+  open(e) {
     e.preventDefault()
     this.formDom.style.display = 'block'
-    console.log(this.formDom.querySelector('slot'))
-    // this.shadowRoot.querySelector('input').focus()
+    this.inputDom.focus()
     this.btnDom.style.display = 'none'
   }
 
@@ -46,28 +50,20 @@ class McmBtnAdd extends HTMLElement {
   onSubmit(e) {
     e.preventDefault()
 
-    let formData = getFormData($(this.formDom))
-    console.log(formData)
-
-    if (!formData.url) return
-
-    return $.ajax({
-      url: $(this).attr('action'),
-      data: formData,
-      method: 'post'
-    }).then(function (res) {
-      location.reload()
-    })
+    let onSubmitFn = this.getAttribute('onsubmit')
+    if (onSubmitFn && window[onSubmitFn]) {
+      window[onSubmitFn](this.formDom)
+      return
+    }
   }
 }
 
 customElements.define('mcm-btn-add', McmBtnAdd)
 
-function getFormData ($form) {
-  let formArray = $form.serializeArray();
-  let result = {};
-  formArray.forEach((item) => {
-    result[item.name] = item.value;
-  });
-  return result;
+function createHiddenInput(name, value) {
+  let dom = document.createElement('input')
+  dom.setAttribute('type', 'hidden')
+  dom.setAttribute('name', name)
+  dom.setAttribute('value', value)
+  return dom
 }

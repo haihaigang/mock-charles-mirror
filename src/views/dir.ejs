@@ -64,47 +64,6 @@
         color: #ddd;
       }
 
-      .dialog-tools {
-        position: absolute;
-        top: 22px;
-        right: 22px;
-        z-index: 9;
-      }
-      .dialog-tools-btn {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        width: 44px;
-        height: 44px;
-        color: #57606a;
-        border-radius: 5px;
-        border-radius: 5px 5px 0 0;
-        cursor: pointer;
-      }
-
-      .dialog-tools-btn:hover {
-        background-color: #efefef;
-      }
-      .dialog-tools-btn.on{
-        background-color: #e6e6e6;
-      }
-      .dialog-tools-list {
-        position: absolute;
-        top: 44px;
-        right: 0;
-        display: none;
-        min-width: 100px;
-        padding: 7px 0;
-        background-color: #e6e6e6;
-        box-shadow: -2px 2px 5px rgb(230 230 230 / 80%);
-        border-radius: 5px 0 5px 5px;
-      }
-      .dialog-tools-list a {
-        display: block;
-        padding: 7px 10px;
-        text-align: center;
-      }
-
       #domain-add input {
         box-sizing: border-box;
         width: 100%;
@@ -132,11 +91,16 @@
           <td class="last-modified"></td>
           <td class="file-size"><code></code></td>
           <td class="display-name">
-              <a href="/admin" title="添加一个目录" id="btn-add-dir">++添加目录++</a>
-              <form id="form-add-dir" style="display: none;" action="/admin/saveDir">
-                <input class="form-control" type="text" name="url" placeholder="输入一个目录名称" autocomplete="off" />
-                <input class="form-control" type="hidden" name="dir" value="<%= dir%>" />
-              </form>
+            <mcm-btn-add
+                btn-text="++添加目录++"
+                btn-title="添加一个目录"
+                data-action="/admin/saveDir"
+                data-placeholder="输入一个目录名称"
+                data-other-name="dir"
+                data-other-value="<%= dir%>"
+                onsubmit="submitAdd"
+                >
+              </mcm-btn-add>
             </td>
           </tr>
           <tr>
@@ -144,18 +108,16 @@
             <td class="last-modified"></td>
             <td class="file-size"><code></code></td>
             <td class="display-name">
-              <mcm-btn-add btn-text="++添加文件++" btn-title="添加一个文件" data-action="/admin/saveApi">
-                <div slot="content">
-                  <input class="form-control" type="text" name="url" placeholder="输入一个文件名称" autocomplete="off" />
-                  <input class="form-control" type="hidden" name="content" value="{}" />
-                  <button type="submit">submit</button>
-                </div>
+              <mcm-btn-add
+                btn-text="++添加文件++"
+                btn-title="添加一个文件"
+                data-action="/admin/saveApi"
+                data-placeholder="输入一个文件名称"
+                data-other-name="content"
+                data-other-value="{}"
+                onsubmit="submitAdd"
+                >
               </mcm-btn-add>
-              <!-- <a href="/admin" title="添加一个文件" id="btn-add-file">++添加文件++</a>
-              <form id="form-add-file" style="display: none;" action="/admin/saveApi">
-                <input class="form-control" type="text" name="url" placeholder="输入一个文件名称" autocomplete="off" />
-                <input class="form-control" type="hidden" name="content" value="{}" />
-              </form> -->
           </td>
         </tr>
       </table>
@@ -163,24 +125,10 @@
       <br />
       <p>Mock Charles Mirror <a href="#" id="btn-change-doamin">@<%= mockDomain%></a></p>
     </div>
-    <div id="tools" class="dialog-tools">
-      <summary class="dialog-tools-btn btn-octicon">
-        <svg aria-hidden="true" height="16" viewBox="0 0 16 16" version="1.1" width="16" data-view-component="true"
-          class="octicon octicon-list-unordered">
-          <path fill-rule="evenodd"
-            d="M2 4a1 1 0 100-2 1 1 0 000 2zm3.75-1.5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zm0 5a.75.75 0 000 1.5h8.5a.75.75 0 000-1.5h-8.5zM3 8a1 1 0 11-2 0 1 1 0 012 0zm-1 6a1 1 0 100-2 1 1 0 000 2z">
-          </path>
-        </svg>
-      </summary>
-      <div class="dialog-tools-list">
-        <a href="#" data-action="add-domain">新增域名</a>
-        <a href="#" data-action="open-domain">切换域名</a>
-        <a href="/admin">新增接口</a>
-      </div>
-    </div>
+    <mcm-dialog-tools></mcm-dialog-tools>
     <mcm-dialog id="domain-add" style="display: none;">
       <span slot="title">新增一个域名</span>
-      <form id="form-add-domain" action="/admin/addMockDomain" slot="content">
+      <form action="/admin/addMockDomain" slot="content">
         <input class="form-control" type="text" name="domain" placeholder="输入一个域名名称" autocomplete="off" />
       </form>
     </mcm-dialog>
@@ -194,46 +142,23 @@
     <script src="/static/components/mcm-dialog.js"></script>
     <%- include('templates/tpl-mcm-btn-add'); -%>
     <script src="/static/components/mcm-btn-add.js"></script>
+    <%- include('templates/tpl-mcm-dialog-tools'); -%>
+    <script src="/static/components/mcm-dialog-tools.js"></script>
     <script type="text/javascript">
       let currentDomain = '<%= mockDomain%>'
-      function setupForm($btn) {
-        var $form = $btn.next()
-        $btn.click(function (e) {
-          e.preventDefault()
-          $form.show().find('input').focus()
-          $btn.hide()
-          isAddFile = false
-        })
-
-        $form.find('input').keyup(function(e) {
-          if (e.keyCode === 27) {
-            $form.hide()
-            $btn.show()
-          }
-        }).blur(function(e) {
-          $form.hide()
-          $btn.show()
-        })
-
-        $form.submit(function (e) {
-          e.preventDefault()
-
-          let formData = getFormData($(this))
+      function submitAdd(form) {
+          let formData = getFormData($(form))
 
           if (!formData.url) return
 
           return $.ajax({
-            url: $(this).attr('action'),
+            url: $(form).attr('action'),
             data: formData,
             method: "post",
           }).then(function (res) {
             location.reload()
           });
-        })
-      }
-
-      setupForm($('#btn-add-dir'))
-      setupForm($('#btn-add-file'))
+        }
 
       function getFormData ($form) {
           let formArray = $form.serializeArray();
@@ -244,7 +169,7 @@
           return result;
         }
 
-      function openDomain(params) {
+      function openDomain() {
         $.ajax({
           url: '/admin/getMockDomains'
         }).then(function (res) {
@@ -277,36 +202,6 @@
         }).then(function (res) {
           location.reload()
         })
-      })
-
-      $('#tools').click(function(e) {
-        e.stopPropagation()
-      })
-
-      $('.dialog-tools-btn').click(function(e) {
-        $(this).toggleClass('on')
-        $('.dialog-tools-list').toggle()
-      })
-      $('body').click(function(e) {
-        $('.dialog-tools-btn').removeClass('on')
-        $('.dialog-tools-list').hide()
-      })
-
-      $('#tools').on('click', '.dialog-tools-list a', function(e){
-        e.preventDefault()
-        let action = $(this).data('action')
-        switch (action) {
-          case 'add-domain':
-            // $('#domain-add').show()
-            document.querySelector('#domain-add').open()
-            break;
-          case 'open-domain':
-            openDomain()
-            break;
-        
-          default:
-            break;
-        }
       })
 
       $('#domain-add form').submit(function (e) {
