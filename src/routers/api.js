@@ -13,7 +13,8 @@ router.use((req, res, next) => {
 })
 
 router.all('*', async (req, res, next) => {
-  if (ForwardOpenConfig.isOpen()) {
+  if (ForwardOpenConfig.isOpen() && req.headers.referer) {
+    // 排除直接访问的（req.headers.referer）
     let forwardAndSaveFileService = new ForwardAndSaveFileService(res.locals.mockDomain, req)
     let dfdData = await forwardAndSaveFileService.start()
     if (dfdData.status) {
@@ -45,7 +46,8 @@ router.all('*', async (req, res, next) => {
   res.render(VIEWS_NAME_DIR, {
     files,
     dir: req.path,
-    mockDomain: res.locals.mockDomain
+    mockDomain: res.locals.mockDomain,
+    isForwardOpen: ForwardOpenConfig.isOpen(),
   })
 });
 

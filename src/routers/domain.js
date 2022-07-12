@@ -36,7 +36,7 @@ router.post('/addMockDomain', (req, res, next) => {
 function getMockDomains() {
   let files = fs.readdirSync(path.resolve(process.cwd(), '../mock'))
   if (files) {
-    files = files.filter(file => !['README.md'].includes(file))
+    files = files.filter(file => !['README.md'].includes(file) && !file.startsWith('.'))
   }
   return files
 }
