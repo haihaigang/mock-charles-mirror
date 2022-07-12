@@ -1,7 +1,7 @@
 import express from 'express'
 import path from 'path'
 import fs from 'fs'
-import MockDomain from '../models/MockDomain.js'
+import MockDomainConfig from '../config/MockDomainConfig.js'
 
 const router = express.Router()
 
@@ -17,7 +17,7 @@ router.post('/changeMockDomain', (req, res, next) => {
   let domains = getMockDomains()
   if (!domains.includes(domain)) throw new Error('参数错误，domain 不在可选范围')
 
-  MockDomain.set(domain)
+  MockDomainConfig.set(domain)
   res.json({})
 })
 

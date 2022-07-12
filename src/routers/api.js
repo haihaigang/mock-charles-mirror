@@ -1,6 +1,8 @@
 import express from "express"
 import path from "path";
-import MockFileService from "../services/mockFileService.js";
+import MockFileService from "../services/MockFileService.js";
+import ForwardAndSaveFileService from '../services/ForwardAndSaveFileService.js'
+import ForwardOpenConfig from "../config/ForwardOpenConfig.js";
 
 const router = express.Router()
 const VIEWS_NAME_DIR = "dir";
@@ -10,7 +12,18 @@ router.use((req, res, next) => {
   next()
 })
 
-router.all('*', (req, res, next) => {
+router.all('*', async (req, res, next) => {
+  if (ForwardOpenConfig.isOpen()) {
+    let forwardAndSaveFileService = new ForwardAndSaveFileService(res.locals.mockDomain, req)
+    let dfdData = await forwardAndSaveFileService.start()
+    if (dfdData.status) {
+      res.status(dfdData.status).send(dfdData.message)
+    } else {
+      res.json(dfdData)
+    }
+    return res.end()
+  }
+
   let mfs = new MockFileService(res.locals.mockDomain, req.originalUrl)
 
   // 目录不存在
