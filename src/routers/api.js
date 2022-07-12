@@ -13,8 +13,7 @@ router.use((req, res, next) => {
 })
 
 router.all('*', async (req, res, next) => {
-  if (ForwardOpenConfig.isOpen() && req.headers.referer) {
-    // 排除直接访问的（req.headers.referer）
+  if (ForwardOpenConfig.isOpen() && !sameOrigin(req.headers)) {
     let forwardAndSaveFileService = new ForwardAndSaveFileService(res.locals.mockDomain, req)
     let dfdData = await forwardAndSaveFileService.start()
     if (dfdData.status) {
@@ -66,6 +65,10 @@ function getFiles(mfs) {
 function notFound(res) {
   res.status(404).end("404"); 
   res.end()
+}
+
+function sameOrigin(headers) {
+  return headers.referer && headers.referer.indexOf(headers.host) > 0
 }
 
 export default router

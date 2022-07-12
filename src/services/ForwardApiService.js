@@ -34,7 +34,7 @@ class ForwardApiService {
       if (error.response) {
         return {status: error.response.status, message: error.response.data}
       } else if (error.request) {
-        return {status: 500, message: error.request}
+        return {status: 500, message: error.message}
       } else {
         return {status: 500, message: error.message}
       }
