@@ -46,10 +46,21 @@ class McmDialogTools extends HTMLElement {
       case 'open-domain':
         openDomain()
         break
-
+      case 'toggle-forward-status':
+        this.toggleForwardStatus(e.target)
+        break
       default:
         break
     }
+  }
+
+  toggleForwardStatus(target) {
+    $.ajax({
+      url: '/config/toggleForwardOpen',
+      type: 'POST'
+    }).then(function (res) {
+      target.innerText = res ? '关闭转发' : '开启转发'
+    })
   }
 }
 

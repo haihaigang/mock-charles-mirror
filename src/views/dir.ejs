@@ -219,6 +219,15 @@
             location.reload()
           });
         })
+
+        function toggleForwardOpen() {
+          $.ajax({
+            url: '/config/toggleForwardOpen',
+            type: 'POST'
+          }).then(function (res) {
+            location.reload()
+          })
+        }
     </script>
   </body>
 </html>
