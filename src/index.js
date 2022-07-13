@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import Express from 'express'
 import { env } from 'process'
 
