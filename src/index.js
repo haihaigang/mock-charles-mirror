@@ -1,18 +1,18 @@
-import Express from "express";
-import process from "process";
+import Express from 'express'
+import { env } from 'process'
 
 import initMiddlewares from './middlewares/index.js'
 import initRouter from './routers/index.js'
 
 function start() {
-  const app = new Express();
+  const app = new Express()
   initMiddlewares(app)
   initRouter(app)
 
-  const PORT = process.env.PORT;
+  const { name, PORT } = env
   app.listen(PORT, () => {
-    console.log(`${process.env.name} server listen on ${PORT}`);
-  });
+    console.log(`${name} server listen on ${PORT}`)
+  })
 }
 
 start()

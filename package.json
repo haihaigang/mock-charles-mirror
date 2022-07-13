@@ -1,12 +1,20 @@
 {
-  "name": "mock-charles-mirror",
+  "name": "@mt/mock-charles-mirror",
   "version": "1.0.0",
   "description": "使用 charles mirror 保存的数据生成 mock 接口",
   "main": "index.js",
   "scripts": {
     "start": "pm2 start ecosystem.local.config.cjs"
   },
-  "author": "",
+  "author": "wanghaigang",
+  "bin": {
+    "mock-charles-mirror": "./src/index.js"
+  },
+  "files": [
+    "src",
+    "static",
+    "mock"
+  ],
   "license": "ISC",
   "dependencies": {
     "axios": "^0.27.2",
