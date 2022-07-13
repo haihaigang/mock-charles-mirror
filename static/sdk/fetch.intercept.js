@@ -5,7 +5,7 @@
       let domains = /^https?:\/\/(.+?)\/.*/.exec(url)
       if (domains) {
         let domain = domains[1]
-        url = url.replace(domain, `${location.protocol}//${location.host}` | 'http://127.0.0.1:3007')
+        url = url.replace(domain, '127.0.0.1:3007')
         params.headers['x-mock-domain'] = domain
         console.log(['__MOCK__', url])
       }
