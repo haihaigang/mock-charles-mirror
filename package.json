@@ -2,7 +2,7 @@
   "name": "@mt/mock-charles-mirror",
   "version": "1.0.0",
   "description": "使用 charles mirror 保存的数据生成 mock 接口",
-  "main": "index.js",
+  "main": "public/index.js",
   "scripts": {
     "start": "pm2 start ecosystem.local.config.cjs"
   },
@@ -11,6 +11,8 @@
     "mock-charles-mirror": "./bin/server.js"
   },
   "files": [
+    "bin",
+    "public",
     "src",
     "static",
     "mock"
