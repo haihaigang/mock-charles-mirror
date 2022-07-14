@@ -8,7 +8,7 @@
   },
   "author": "wanghaigang",
   "bin": {
-    "mock-charles-mirror": "./src/index.js"
+    "mock-charles-mirror": "./bin/server.js"
   },
   "files": [
     "src",
