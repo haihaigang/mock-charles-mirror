@@ -18,17 +18,17 @@ export default function(req, res, next) {
     res.locals.mockDomain = MockDomainConfig.get()
   }
 
-  function checkValidatedDomain(domain) {
-    if (!domain || !/.*\.[-a-zA-Z0-9]{0,63}\.[-a-zA-Z0-9]{0,63}$/.test(domain)) {
-      return false
-    }
+  next()
+}
 
-    if (/^\d+\.\d+\.\d+\.\d+$/.test(domain)) {
-      return false
-    }
-
-    return true
+function checkValidatedDomain(domain) {
+  if (!domain || !/.*\.[-a-zA-Z0-9]{0,63}\.[-a-zA-Z0-9]{0,63}$/.test(domain)) {
+    return false
   }
 
-  next()
+  if (/^\d+\.\d+\.\d+\.\d+$/.test(domain)) {
+    return false
+  }
+
+  return true
 }
