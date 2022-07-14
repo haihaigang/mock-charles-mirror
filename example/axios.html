@@ -5,12 +5,21 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Example Of Axios</title>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
 </head>
 <body>
   <script type="module">
-    import {injectAxios } from "./"
+    import { injectAxios } from "../public/index.js"
 
-    // axios.get('/api')
+    injectAxios(axios)
+
+    // let http = axios.create()
+    axios.request({
+      url: '/v1/activity/new_goods_full_return/61977?nav=0&size=20',
+      baseURL: 'http://api.shouwuapp.com/',
+      method: 'get',
+    })
   </script>
 </body>
 </html>

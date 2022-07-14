@@ -1,11 +1,9 @@
-import axios from "axios"
-
 let reg_mock = /__mock__/i
 function isFromMock(url, params) {
   return reg_mock.test(url) || (params && reg_mock.test(params.body)) || reg_mock.test(location.search)
 }
 
-export default function injectAxios(mockHost = '127.0.0.1:3007') {
+export default function injectAxios(axios, mockHost = '127.0.0.1:3007') {
   // 请求发出前
   axios.interceptors.request.use(
     cfg => {

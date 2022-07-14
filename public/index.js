@@ -1,3 +1,3 @@
-import injectAxios from "./axios"
+import injectAxios from "./axios.js"
 
 export { injectAxios }
