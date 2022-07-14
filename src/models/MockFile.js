@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import moment from "moment";
 import { formatByteSize } from '../common/formatByteSize.js'
-const MOCK_ROOT_PATH = "../mock";
+import { MOCK_ROOT_PATH } from "../constant/root-paths.js";
 
 class MockFile {
   static ENCODING = "utf-8";
@@ -27,7 +27,6 @@ class MockFile {
   init(filePath) {
     this.filePath = _formatFilePath(filePath);
     this.rootPath = path.resolve(
-      process.cwd(),
       MOCK_ROOT_PATH,
       this.mockDomain
     );

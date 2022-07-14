@@ -2,6 +2,7 @@ import express from 'express'
 import path from 'path'
 import fs from 'fs'
 import MockDomainConfig from '../config/MockDomainConfig.js'
+import { MOCK_ROOT_PATH } from '../constant/root-paths.js'
 
 const router = express.Router()
 
@@ -29,12 +30,12 @@ router.post('/addMockDomain', (req, res, next) => {
   let domains = getMockDomains()
   if (domains.includes(domain)) throw new Error('参数错误，domain 已经存在')
 
-  fs.mkdirSync(path.resolve(process.cwd(), '../mock', domain))
+  fs.mkdirSync(path.resolve(MOCK_ROOT_PATH, domain))
   res.json({})
 })
 
 function getMockDomains() {
-  let files = fs.readdirSync(path.resolve(process.cwd(), '../mock'))
+  let files = fs.readdirSync(MOCK_ROOT_PATH)
   if (files) {
     files = files.filter(file => !['README.md'].includes(file) && !file.startsWith('.'))
   }
