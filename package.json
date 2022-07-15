@@ -25,5 +25,9 @@
     "moment": "^2.29.4",
     "minimist": "^1.2.6"
   },
-  "type": "module"
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/haihaigang/mock-charles-mirror.git"
+  },
 }
