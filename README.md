@@ -55,10 +55,10 @@ fetch 版
 ```
 import fetch from "whatwg-fetch"
 import { injectFetch } from "mock-charles-mirror"
-injectFetch(fetch, '127.0.0.1:3007')
+fetch = injectFetch(fetch, '127.0.0.1:3007')
 
 // 如果是默认端口可省略参数
-injectFetch(fetch)
+fetch = injectFetch(fetch)
 ```
 
 1. 启动后，前端按照上面代码示例在全局接入即可
