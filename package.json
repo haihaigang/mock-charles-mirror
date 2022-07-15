@@ -1,6 +1,6 @@
 {
-  "name": "@mt/mock-charles-mirror",
-  "version": "1.0.0",
+  "name": "mock-charles-mirror",
+  "version": "0.0.1",
   "description": "使用 charles mirror 保存的数据生成 mock 接口",
   "main": "public/index.js",
   "scripts": {
@@ -29,5 +29,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/haihaigang/mock-charles-mirror.git"
-  },
+  }
 }
