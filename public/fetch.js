@@ -17,4 +17,6 @@ export default function injectFetch(fetch, mockHost = '127.0.0.1:3007') {
 
     return _fetch(url, params)
   }
+  
+  return fetch
 }
