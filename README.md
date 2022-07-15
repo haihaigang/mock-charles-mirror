@@ -4,6 +4,12 @@
 
 ## 安装
 
+### 直接运行
+
+```
+npx mock-charles-mirror [options]
+```
+
 #### 全局安装
 
 ```
@@ -22,22 +28,45 @@ npm install mock-charles-mirror
 mock-charles-mirror [options]
 ```
 
-1. 默认会启动一个 <http://127.0.0.1:3007> 的服务，访问可查看和管理接口
-
-```
-import { injectAxios } from "mock-charles-mirror"
-injectAxios('127.0.0.1:3007')
-```
-
-2. 启动后，前端按照上面代码示例在全局接入即可
-3. 接入完成，开启使用可以在 url 参数、请求 body、页面参数里追加 `__mock__=1`
-
-如果使用全局 fetch 的方式可以直接引入 sdk，参照 [前端如何接入使用](./docs/%E5%89%8D%E7%AB%AF%E5%A6%82%E4%BD%95%E6%8E%A5%E5%85%A5%E4%BD%BF%E7%94%A8%3F.md) 里的 “接入 sdk（fetch版）”
+默认会启动一个 <http://127.0.0.1:3007> 的服务，访问可查看和管理接口
 
 ### options
 | 命令         | 	说明         | 默认值  |
 | -------------  |-------------|-------------|
 |`-p` or `--port` | 使用的端口号 |3007 |
+
+## 前端接入使用
+
+axios 版
+```
+import axios from "axios"
+import { injectAxios } from "mock-charles-mirror"
+injectAxios(axios, '127.0.0.1:3007')
+
+// 如果是默认端口可省略参数
+injectAxios(axios)
+
+// 如果使用 axios.create 的实例
+let http = axios.create(...)
+injectAxios(http)
+```
+
+fetch 版
+```
+import fetch from "whatwg-fetch"
+import { injectFetch } from "mock-charles-mirror"
+injectFetch(fetch, '127.0.0.1:3007')
+
+// 如果是默认端口可省略参数
+injectFetch(fetch)
+```
+
+1. 启动后，前端按照上面代码示例在全局接入即可
+2. 接入完成，开启使用可以在 url 参数、请求 body、页面参数里追加 `__mock__=1`
+
+如果使用全局 fetch 的方式可以直接引入 sdk，参照 [前端如何接入使用](./docs/%E5%89%8D%E7%AB%AF%E5%A6%82%E4%BD%95%E6%8E%A5%E5%85%A5%E4%BD%BF%E7%94%A8%3F.md) 里的 “接入 sdk（fetch版）”
+
+如果使用其他方式的，参照[前端如何接入使用](./docs/%E5%89%8D%E7%AB%AF%E5%A6%82%E4%BD%95%E6%8E%A5%E5%85%A5%E4%BD%BF%E7%94%A8%3F.md) 中 “请求头传参方式” 实现即可
 
 ## 管理功能
 
