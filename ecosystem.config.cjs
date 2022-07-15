@@ -1,6 +1,6 @@
 module.exports = {
   apps : [{
-    name: 'Mock Charles Mirror',
+    name: 'mock-charles-mirror',
     cwd: './src',
     script: './index.js',
     args: 'one two',
