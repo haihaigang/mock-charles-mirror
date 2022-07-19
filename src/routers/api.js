@@ -7,11 +7,6 @@ import ForwardOpenConfig from "../config/ForwardOpenConfig.js";
 const router = express.Router()
 const VIEWS_NAME_DIR = "dir";
 
-router.use((req, res, next) => {
-  console.log(`====== start ${req.originalUrl}`);
-  next()
-})
-
 router.all('*', async (req, res, next) => {
   if (ForwardOpenConfig.isOpen() && !sameOrigin(req.headers)) {
     let forwardAndSaveFileService = new ForwardAndSaveFileService(res.locals.mockDomain, req)
