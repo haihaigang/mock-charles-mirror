@@ -68,7 +68,7 @@ function notFound(res) {
 }
 
 function sameOrigin(headers) {
-  return headers.referer && headers.referer.indexOf(headers.host) > 0
+  return headers.referer && headers.host.indexOf(headers.referer) > 0
 }
 
 export default router
