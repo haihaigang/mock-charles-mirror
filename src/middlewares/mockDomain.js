@@ -11,17 +11,17 @@ export default function(req, res, next) {
   if (req.headers['x-mock-domain']) {
     domain = req.headers['x-mock-domain']
   }
-  if (checkValidatedDomain(domain)) {
+  if (checkAvailableDomain(domain)) {
     res.locals.mockDomain = domain
+    res.locals.availableDomain = true
   } else {
-    // res.locals.mockDomain = 'api-qa.shouwuapp.com'
     res.locals.mockDomain = MockDomainConfig.get()
   }
 
   next()
 }
 
-function checkValidatedDomain(domain) {
+function checkAvailableDomain(domain) {
   if (!domain || !/.*\.[-a-zA-Z0-9]{0,63}\.[-a-zA-Z0-9]{0,63}$/.test(domain)) {
     return false
   }

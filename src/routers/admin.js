@@ -5,11 +5,6 @@ import MockFileService from "../services/mockFileService.js"
 const router = express.Router()
 const VIEWS_NAME_ADMIN = 'admin'
 
-router.use((req, res, next) => {
-  console.log('admin middleware', req.originalUrl, req.query, req.body)
-  next()
-})
-
 router.all('/', (req, res, next) => {
   res.render(VIEWS_NAME_ADMIN);
 })
